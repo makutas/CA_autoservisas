@@ -1,5 +1,5 @@
 from django.db import models
-import datetime
+from django.utils import timezone
 
 
 class CarModel(models.Model):
@@ -12,18 +12,24 @@ class CarModel(models.Model):
     def __str__(self):
         return f"{self.brand} - {self.car_model}"
 
-    # TODO - Class Meta: verbose_name+plural
+    class Meta:
+        verbose_name = 'Car Model'
+        verbose_name_plural = 'Car Models'
 
 
 class Car(models.Model):
     car_id = models.AutoField(primary_key=True)
     car_model = models.ForeignKey(CarModel, on_delete=models.SET_NULL, null=True)
     plate_nr = models.CharField(max_length=20)
-    vin_number = models.CharField(max_length=200)
+    vin_number = models.CharField(max_length=17)
     client = models.CharField(max_length=100)
 
     def __str__(self):
         return f"{self.client} - {self.car_model} - {self.plate_nr} - {self.vin_number}"
+
+    class Meta:
+        verbose_name = 'Car'
+        verbose_name_plural = 'Cars'
 
 
 class Service(models.Model):
@@ -32,6 +38,10 @@ class Service(models.Model):
 
     def __str__(self):
         return f"{self.service_name}"
+
+    class Meta:
+        verbose_name = 'Services'
+        verbose_name_plural = 'Services'
 
 
 class ServicePrice(models.Model):
@@ -43,25 +53,36 @@ class ServicePrice(models.Model):
     def __str__(self):
         return f"{self.service} - {self.price}"
 
+    class Meta:
+        verbose_name = 'Service Price'
+        verbose_name_plural = 'Service Prices'
+
     # TODO - prideti manytomany fielda i admina per atskira methoda
 
 
 class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
-    order_date = models.DateTimeField(default=datetime.datetime.now())
+    order_date = models.DateTimeField(default=timezone.now)
     car = models.ForeignKey(Car, on_delete=models.SET_NULL, null=True)
+    service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
+    quantity = models.IntegerField()
     total_price = models.FloatField()
 
     def __str__(self):
-        return f"{self.car} - {self.total_price} - {self.order_date}"
+        return f"{self.car} - {self.service} - {self.total_price} - {self.order_date}"
+
+    class Meta:
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'
 
 
-class OrderList(models.Model):
-    order_list_id = models.AutoField(primary_key=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-    service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
-    quantity = models.IntegerField()
-    price = models.FloatField()
-
-    def __str__(self):
-        return f"{self.service} - {self.quantity} - {self.price}"
+# FIXME: Is this logical?
+# class OrderInstance(models.Model):
+#     order_list_id = models.AutoField(primary_key=True)
+#     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+#     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
+#     quantity = models.IntegerField()
+#     price = models.FloatField()
+#
+#     def __str__(self):
+#         return f"{self.service} - {self.quantity} - {self.price}"
