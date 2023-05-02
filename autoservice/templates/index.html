@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Autoservice</h1>
+<p>We can currently offer:</p>
+<ul>
+	<li><strong>Cars:</strong> {% for model in car_models %} {{model.brand}} {% endfor %}</li>
+	<li><strong>We can currently repair:</strong> {{ car_model_count }} different cars!</li>
+	<li><strong>Services:</strong> {% for service in services %} {{service.service_name}}, {% endfor %}</li>
+	<li><strong>Current service count:</strong> {{ services_count }}</li>
+</ul>
+{% endblock %}
