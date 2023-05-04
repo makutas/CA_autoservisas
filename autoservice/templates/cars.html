@@ -1,14 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load static %}
 <h1>Cars:</h1>
+<div class="row">
 {% for car in object_list %}
-	<li>
-		<a href="{% url 'specific_car' car.car_id %}">{{car.car_model}} - {{car.car_model.engine}} - ({{car.client}})</a>
-	</li>
+    <div class="col-md-4 d-flex align-items-stretch">
+      <div class="card mb-4 shadow-sm box">
+        {% if car.photo %}
+          <img src="{{ car.photo.url }}" class="card-img-top car-photo"  alt="...">
+        {% else %}
+          <img src="{% static 'media/car_photos/no-image.png' %}" class="card-img-top car-photo">
+        {% endif %}
+        <div class="card-body">
+          <a href="{{ car.car_id }}">
+            <p class="card-text">{{ car.car_model }} </br> {{ car.plate_nr }}</p>
+          </a>
+          <p class="card-text">{{ car.client }}</p>
+        </div>
+      </div>
+    </div>
 {% endfor %}
+</div>
 
-  <div class="pagination">
+<div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
             <a href="?page=1">&laquo; pirmas</a>
