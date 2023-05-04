@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load static %}
+
+{% if car.photo %}
+  <img src="{{ car.photo.url }}" class="card-img-top car-photo"  alt="...">
+{% else %}
+  <img src="{% static 'media/car_photos/no-image.png' %}" class="card-img-top car-photo">
+{% endif %}
 
 <h1>{{car.car_model}}</h1>
 <h4>Licence plate nr: {{car.plate_nr}}</h4>

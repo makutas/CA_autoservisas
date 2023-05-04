@@ -1,5 +1,8 @@
 from django.shortcuts import render, get_object_or_404
-from .models import *
+from django.core.paginator import Paginator
+from django.views import generic
+from .models import Car, CarModel, Service, Order, OrderList
+from django.db.models import Q
 
 
 def index(request):
@@ -17,12 +20,10 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-def cars(request):
-    all_cars = Car.objects.all()
-    context = {
-        'cars': all_cars
-    }
-    return render(request, "cars.html", context)
+class CarListView(generic.ListView):
+    model = Car
+    paginate_by = 2
+    template_name = "cars.html"
 
 
 def specific_car(request, car_id):
@@ -40,13 +41,22 @@ def services(request):
 
 
 def orders(request):
-    all_orders = OrderList.objects.all()
-    context = {
-        'orders': all_orders
-    }
-    return render(request, 'orders.html', context)
+    paginator = Paginator(OrderList.objects.all(), 2)
+    page_number = request.GET.get('page')
+    paged_orders = paginator.get_page(page_number)
+    return render(request, 'orders.html', {'orders': paged_orders})
 
 
-def specific_order(request, order_id):
-    pass
+def specific_order(request, order_list_id):
+    order_list = get_object_or_404(OrderList, pk=order_list_id)
+    orders_of_order_list = Order.objects.filter(order_list_id__exact=order_list_id)
+    context = {'order_list': order_list, 'orders': orders_of_order_list}
+    return render(request, "specific_order.html", context)
 
+
+def search_cars(request):
+    query = request.GET.get('query')
+    search_results = Car.objects.filter(Q(client__icontains=query) | Q(car_model__car_model__icontains=query)
+                                        | Q(car_model__brand__icontains=query) | Q(plate_nr__icontains=query)
+                                        | Q(vin_number__icontains=query))
+    return render(request, 'search_cars.html', {'cars': search_results, 'query': query})

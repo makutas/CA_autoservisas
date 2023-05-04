@@ -23,6 +23,7 @@ class Car(models.Model):
     plate_nr = models.CharField(max_length=20)
     vin_number = models.CharField(max_length=17)
     client = models.CharField(max_length=100)
+    photo = models.ImageField("Photo", upload_to="car_photos", null=True)
 
     def __str__(self):
         return f"{self.client} - {self.car_model} - {self.plate_nr} - {self.vin_number}"
