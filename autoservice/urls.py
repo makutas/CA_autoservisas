@@ -6,7 +6,7 @@ urlpatterns = [
     # INDEX
     path('', views.index, name='index'),
     # PAGE TO DISPLAY ALL CARS IN SERVICE
-    path('cars/', views.cars, name='cars'),
+    path('cars/', views.CarListView.as_view(), name='cars'),
     # DETAIL DISPLAY OF CAR
     path('cars/<int:car_id>', views.specific_car, name='specific_car'),
     # ALL SERVICES

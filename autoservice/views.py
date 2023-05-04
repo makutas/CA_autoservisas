@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
+from django.views import generic
 from .models import Car, CarModel, Service, Order, OrderList
 
 
@@ -17,12 +19,10 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-def cars(request):
-    all_cars = Car.objects.all()
-    context = {
-        'cars': all_cars
-    }
-    return render(request, "cars.html", context)
+class CarListView(generic.ListView):
+    model = Car
+    paginate_by = 2
+    template_name = "cars.html"
 
 
 def specific_car(request, car_id):
@@ -40,11 +40,10 @@ def services(request):
 
 
 def orders(request):
-    all_orders = OrderList.objects.all()
-    context = {
-        'orders': all_orders
-    }
-    return render(request, 'orders.html', context)
+    paginator = Paginator(OrderList.objects.all(), 2)
+    page_number = request.GET.get('page')
+    paged_orders = paginator.get_page(page_number)
+    return render(request, 'orders.html', {'orders': paged_orders})
 
 
 def specific_order(request, order_list_id):
