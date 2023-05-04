@@ -14,5 +14,5 @@ urlpatterns = [
     # ALL ORDERS
     path('orders/', views.orders, name='orders'),
     # SPECIFIC ORDER
-    path('orders/<int:order_id>/', views.specific_order, name='specific_order'),
+    path('orders/<int:order_list_id>/', views.specific_order, name='specific_order'),
 ]

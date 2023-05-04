@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import *
+from .models import Car, CarModel, Service, Order, OrderList
 
 
 def index(request):
@@ -47,6 +47,9 @@ def orders(request):
     return render(request, 'orders.html', context)
 
 
-def specific_order(request, order_id):
-    pass
+def specific_order(request, order_list_id):
+    order_list = get_object_or_404(OrderList, pk=order_list_id)
+    orders_of_order_list = Order.objects.filter(order_list_id__exact=order_list_id)
+    context = {'order_list': order_list, 'orders': orders_of_order_list}
+    return render(request, "specific_order.html", context)
 
