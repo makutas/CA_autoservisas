@@ -15,4 +15,6 @@ urlpatterns = [
     path('orders/', views.orders, name='orders'),
     # SPECIFIC ORDER
     path('orders/<int:order_list_id>/', views.specific_order, name='specific_order'),
+    # SEARCH FOR A SPECIFIC CAR BASED ON CLIENT, MODEL, NUMBER PLATE, VIN NUMBER
+    path('search_cars/', views.search_cars, name='search_cars'),
 ]

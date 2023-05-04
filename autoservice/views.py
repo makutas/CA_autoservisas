@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.views import generic
 from .models import Car, CarModel, Service, Order, OrderList
+from django.db.models import Q
 
 
 def index(request):
@@ -52,3 +53,10 @@ def specific_order(request, order_list_id):
     context = {'order_list': order_list, 'orders': orders_of_order_list}
     return render(request, "specific_order.html", context)
 
+
+def search_cars(request):
+    query = request.GET.get('query')
+    search_results = Car.objects.filter(Q(client__icontains=query) | Q(car_model__car_model__icontains=query)
+                                        | Q(car_model__brand__icontains=query) | Q(plate_nr__icontains=query)
+                                        | Q(vin_number__icontains=query))
+    return render(request, 'search_cars.html', {'cars': search_results, 'query': query})
