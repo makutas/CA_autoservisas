@@ -2,6 +2,13 @@
 
 {% block content %}
 <h1>Autoservice</h1>
+
+{% if num_visits == 1 %}
+<p>Welcome to our website for the first time!</p>
+{% else %}
+<p>Welcome back! You have been at this website {{ num_visits }} times so far!</p>
+{% endif %}
+
 <p>We can currently offer:</p>
 <ul>
 	<li><strong>Cars:</strong> {% for model in car_models %} {{model.brand}} {% endfor %}</li>
