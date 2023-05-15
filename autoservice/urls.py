@@ -18,4 +18,6 @@ urlpatterns = [
     path('search_cars/', views.search_cars, name='search_cars'),
     # INCLUDE ALL DJANGO-GENERATED ROUTES FOR USER MANAGEMENT
     path('accounts/', include('django.contrib.auth.urls')),
+    # THE ORDERS OF A SPECIFIC USER
+    path('user_order/', views.user_books, name='user_orders'),
 ]

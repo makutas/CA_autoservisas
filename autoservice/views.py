@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.views import generic
+from django.contrib.auth.decorators import login_required
 from .models import Car, CarModel, Service, Order, OrderList
 from django.db.models import Q
 
@@ -62,3 +63,20 @@ def search_cars(request):
                                         | Q(car_model__brand__icontains=query) | Q(plate_nr__icontains=query)
                                         | Q(vin_number__icontains=query))
     return render(request, 'search_cars.html', {'cars': search_results, 'query': query})
+
+
+@login_required(login_url='login')
+def user_orders(request):
+    try:
+        user_orderlists = OrderList.objects.filter(reader=request.user).filter(book_status__exact='t').order_by('due_back')
+    except OrderList.DoesNotExist:
+        user_orderlists = None
+
+    context = {
+        'user': request.user,
+        'user_books': user_orderlists,
+    }
+
+    return render(request, 'user_orderlists.html', context)
+
+
