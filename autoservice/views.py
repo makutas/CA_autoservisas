@@ -1,9 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from .models import Car, CarModel, Service, Order, OrderList
+from django.views.decorators.csrf import csrf_protect
+from django.contrib import messages
 from django.db.models import Q
+from django.contrib.auth.forms import User
 
 
 def index(request):
@@ -80,3 +83,37 @@ def user_orders(request):
     return render(request, 'user_orderlists.html', context)
 
 
+@csrf_protect
+def register(request):
+    if request.method == "POST":
+        # Retrieve values from the form via POST request
+        username = request.POST['username']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+
+        # Check if the original and repeated passwords match
+        if password != password2:
+            messages.error(request, 'The passwords do not match!')
+            return redirect('register')
+
+        # Check if username is taken
+        if User.objects.filter(username=username).exists():
+            messages.error(request, f'Username {username} is taken!')
+            return redirect('register')
+
+        # Check if email is taken
+        if User.objects.filter(email=email).exists():
+            messages.error(request, f'Email {email} is taken!')
+            return redirect('register')
+
+        # If the checks are passed, we can create a new User
+        User.objects.create_user(username=username, first_name=first_name, last_name=last_name,
+                                 email=email, password=password)
+
+        messages.info(request, f'User {username} registered successfully!')
+        return redirect('login')
+
+    return render(request, 'registration/register.html')

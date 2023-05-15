@@ -72,6 +72,13 @@ class OrderList(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     total_price = models.FloatField()
 
+    # @property
+    # def total_orderlist_price(self):
+    #     total_sum = 0
+    #     for order in self.orders:
+    #         total_sum += order.total_order_price()
+    #     return total_sum
+
     def __str__(self):
         return f"{self.car} - {self.order_date} - {self.total_price}"
 
@@ -93,6 +100,10 @@ class Order(models.Model):
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField()
     price = models.FloatField()
+
+    # @property
+    # def total_order_price(self):
+    #     return self.quantity * self.price
 
     def __str__(self):
         return f"{self.order_list_id} - {self.service} - {self.quantity} - {self.price}"
