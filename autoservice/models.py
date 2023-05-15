@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
+from datetime import date
 
 
 class CarModel(models.Model):
@@ -64,10 +66,18 @@ class OrderList(models.Model):
     order_list_id = models.AutoField(primary_key=True)
     order_date = models.DateTimeField(default=timezone.now)
     car = models.ForeignKey(Car, on_delete=models.SET_NULL, null=True)
+    due_back = models.DateField("Due back:", null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     total_price = models.FloatField()
 
     def __str__(self):
         return f"{self.car} - {self.order_date} - {self.total_price}"
+
+    @property
+    def is_overdue(self):
+        if self.due_back and date.today() > self.due_back:
+            return True
+        return False
 
     class Meta:
         verbose_name = 'Order List'
