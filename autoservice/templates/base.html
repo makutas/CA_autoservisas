@@ -21,6 +21,13 @@
 							<li><a href="{% url 'cars' %}">Cars in service</a></li>
 							<li><a href="{% url 'services' %}">Services</a></li>
 							<li><a href="{% url 'orders' %}">Orders</a></li>
+							{% if user.is_authenticated %}
+								<li><a href="#">My orders</a></li>
+								<li><a href="{% url 'logout'%}?next=/">Logout</a></li>
+							{% else %}
+								<li><a href="{% url 'login' %}">Login</a></li>
+								<li><a href="#">Register</a></li>
+							{% endif %}
 						</ul>
 						<form action="{% url 'search_cars' %}" method="get" class="form-inline my-2 my-md-0">
 							<input name="query" class="form-control" type="text" placeholder="Search car">

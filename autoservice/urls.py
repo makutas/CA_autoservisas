@@ -1,5 +1,4 @@
-from django.urls import path
-
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -17,4 +16,6 @@ urlpatterns = [
     path('orders/<int:order_list_id>/', views.specific_order, name='specific_order'),
     # SEARCH FOR A SPECIFIC CAR BASED ON CLIENT, MODEL, NUMBER PLATE, VIN NUMBER
     path('search_cars/', views.search_cars, name='search_cars'),
+    # INCLUDE ALL DJANGO-GENERATED ROUTES FOR USER MANAGEMENT
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

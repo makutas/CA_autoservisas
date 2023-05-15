@@ -59,6 +59,7 @@ class ServicePrice(models.Model):
         verbose_name_plural = 'Service Prices'
 
 
+# Uzsakymas
 class OrderList(models.Model):
     order_list_id = models.AutoField(primary_key=True)
     order_date = models.DateTimeField(default=timezone.now)
@@ -73,9 +74,10 @@ class OrderList(models.Model):
         verbose_name_plural = 'Order Lists'
 
 
+# Uzsakymo eilute
 class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
-    order_list_id = models.ForeignKey(OrderList, on_delete=models.SET_NULL, null=True)
+    order_list_id = models.ForeignKey(OrderList, on_delete=models.SET_NULL, null=True, related_name="orders")
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField()
     price = models.FloatField()
