@@ -22,7 +22,7 @@
 							<li><a href="{% url 'services' %}">Services</a></li>
 							<li><a href="{% url 'orders' %}">Orders</a></li>
 							{% if user.is_authenticated %}
-								<li><a href="{% url ''%}">My orders</a></li>
+								<li><a href="{% url 'my_orders' %}">My orders</a></li>
 								<li><a href="{% url 'logout'%}?next=/">Logout</a></li>
 							{% else %}
 								<li><a href="{% url 'login' %}">Login</a></li>

@@ -27,7 +27,7 @@ class Car(models.Model):
     vin_number = models.CharField(max_length=17)
     client = models.CharField(max_length=100)
     photo = models.ImageField("Photo", upload_to="car_photos", null=True)
-    description = HTMLField()
+    description = HTMLField(null=True)
 
     def __str__(self):
         return f"{self.client} - {self.car_model} - {self.plate_nr} - {self.vin_number}"
@@ -76,7 +76,7 @@ class OrderList(models.Model):
     # def total_orderlist_price(self):
     #     total_sum = 0
     #     for order in self.orders:
-    #         total_sum += order.total_order_price()
+    #         total_sum += order.total_order_price
     #     return total_sum
 
     def __str__(self):
@@ -112,3 +112,14 @@ class Order(models.Model):
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
 
+
+class OrderListComment(models.Model):
+    order_list = models.ForeignKey(OrderList, on_delete=models.SET_NULL, null=True, blank=True, related_name="comments")
+    commenter = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    content = models.TextField('Comment', max_length=2000)
+
+    class Meta:
+        verbose_name = "Comment"
+        verbose_name_plural = 'Comments'
+        ordering = ['-date_created']

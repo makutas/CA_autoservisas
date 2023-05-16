@@ -8,12 +8,37 @@
 <h4><b>Licence plate nr:</b> {{order_list.car.plate_nr}}</h4>
 <h4><b>Vin nr:</b> {{order_list.car.vin_number}}</h4>
 <h4><b>Total price for order list:</b> {{order_list.total_price}}</h4>
+<h4><b>Automatically calculated total price for order list:</b> {{order_list.total_orderlist_price}}</h4>
 <h4><b>Order list comprising of:</b></h4>
 <ul>
     <li><b>Service / Quantity / Price</b></li>
-    {% for order in orders %}
+    {% for order in order_list.orders.all %}
         <li>{{ order.service }} / {{ order.quantity }} / {{ order.price }}</li>
     {% endfor %}
 </ul>
+
+<h4>Comments:</h4>
+  {% if order_list.comments.all %}
+    {% for comment in order_list.comments.all %}
+      <hr>
+      <strong>{{ comment.commenter }}</strong>, <em>{{ comment.date_created}}</em>
+      <p>{{ comment.content }}</p>
+    {% endfor %}
+  {% else %}
+    <p>There are no comments.</p>
+  {% endif %}
+
+  {% if user.is_authenticated %}
+  <div class="fieldWrapper">
+    <hr><br/>
+    <h4>Leave a comment:</h4>
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.content }}</br>
+      <input type="submit" value="Comment">
+    </form>
+  </div>
+  {% endif %}
+
 
 {% endblock %}

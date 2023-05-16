@@ -3,11 +3,11 @@
 {% block content %}
 
 <h1>My placed orders:</h1>
-{% if orderlist_list %}
+{% if order_lists %}
 	<ul>
-		{% for orderlist_list in orderlist_list %}
-			<li class="{% if orderlist.is_overdue %}text-danger{% endif %}">
-				<a href="{% url 'specific_order' orderlist.order_list_id.pk %}">{{orderlist.car}} {{orderlist.order_date}}</a> Due back:({{ orderlist.due_back }})
+		{% for order_list in order_lists %}
+			<li class="{% if order_list.is_overdue %}text-danger{% endif %}">
+				<a href="{% url 'specific_order' order_list.order_list_id %}">{{order_list.car}} {{order_list.order_date}}</a> Due back:({{ order_list.due_back }})
 			</li>
 		{% endfor %}
 	</ul>

@@ -2,11 +2,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.views import generic
 from django.contrib.auth.decorators import login_required
-from .models import Car, CarModel, Service, Order, OrderList
+from .models import Car, CarModel, Service, Order, OrderList, OrderListComment
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.forms import User
+from .forms import OrderListCommentForm
 
 
 def index(request):
@@ -54,9 +55,23 @@ def orders(request):
 
 
 def specific_order(request, order_list_id):
+    if request.method == "POST":
+        form = OrderListCommentForm(request.POST)
+        if form.is_valid():
+            comment = OrderListComment(order_list_id=order_list_id,
+                                       commenter=request.user,
+                                       content=form.cleaned_data['content'])
+            comment.save()
+            messages.info(request, f'You posted a comment successfully!')
+        else:
+            messages.error(request, f'Something went wrong. Please try again.')
+
+        return redirect('specific_order', order_list_id)
+
     order_list = get_object_or_404(OrderList, pk=order_list_id)
-    orders_of_order_list = Order.objects.filter(order_list_id__exact=order_list_id)
-    context = {'order_list': order_list, 'orders': orders_of_order_list}
+    comment_form = OrderListCommentForm()
+    context = {'order_list': order_list,
+               'form': comment_form}
     return render(request, "specific_order.html", context)
 
 
@@ -71,13 +86,13 @@ def search_cars(request):
 @login_required(login_url='login')
 def user_orders(request):
     try:
-        user_orderlists = OrderList.objects.filter(reader=request.user).filter(book_status__exact='t').order_by('due_back')
+        user_orderlists = OrderList.objects.filter(user=request.user).order_by('due_back')
     except OrderList.DoesNotExist:
         user_orderlists = None
 
     context = {
         'user': request.user,
-        'user_books': user_orderlists,
+        'order_lists': user_orderlists,
     }
 
     return render(request, 'user_orderlists.html', context)
