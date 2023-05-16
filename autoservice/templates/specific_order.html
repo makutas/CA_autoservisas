@@ -7,13 +7,12 @@
 <h4><b>Car model:</b> {{order_list.car.car_model}}</h4>
 <h4><b>Licence plate nr:</b> {{order_list.car.plate_nr}}</h4>
 <h4><b>Vin nr:</b> {{order_list.car.vin_number}}</h4>
-<h4><b>Total price for order list:</b> {{order_list.total_price}}</h4>
 <h4><b>Automatically calculated total price for order list:</b> {{order_list.total_orderlist_price}}</h4>
 <h4><b>Order list comprising of:</b></h4>
 <ul>
     <li><b>Service / Quantity / Price</b></li>
     {% for order in order_list.orders.all %}
-        <li>{{ order.service }} / {{ order.quantity }} / {{ order.price }}</li>
+        <li>{{ order.service }} / {{ order.quantity }} / {{ order.unit_price }}</li>
     {% endfor %}
 </ul>
 

@@ -70,17 +70,16 @@ class OrderList(models.Model):
     car = models.ForeignKey(Car, on_delete=models.SET_NULL, null=True)
     due_back = models.DateField("Due back:", null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    total_price = models.FloatField()
 
-    # @property
-    # def total_orderlist_price(self):
-    #     total_sum = 0
-    #     for order in self.orders:
-    #         total_sum += order.total_order_price
-    #     return total_sum
+    @property
+    def total_orderlist_price(self):
+        total_sum = 0
+        for order in self.orders.all():
+            total_sum += order.total_order_price
+        return total_sum
 
     def __str__(self):
-        return f"{self.car} - {self.order_date} - {self.total_price}"
+        return f"{self.car} - {self.order_date} - {self.total_orderlist_price}"
 
     @property
     def is_overdue(self):
@@ -99,14 +98,14 @@ class Order(models.Model):
     order_list_id = models.ForeignKey(OrderList, on_delete=models.SET_NULL, null=True, related_name="orders")
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField()
-    price = models.FloatField()
+    unit_price = models.FloatField()
 
-    # @property
-    # def total_order_price(self):
-    #     return self.quantity * self.price
+    @property
+    def total_order_price(self):
+        return self.quantity * self.unit_price
 
     def __str__(self):
-        return f"{self.order_list_id} - {self.service} - {self.quantity} - {self.price}"
+        return f"{self.order_list_id} - {self.service} - {self.quantity} - {self.unit_price}"
 
     class Meta:
         verbose_name = 'Order'
