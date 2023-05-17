@@ -22,4 +22,6 @@ urlpatterns = [
     path('user_order/', views.user_orders, name='my_orders'),
     # REGISTER FORM FOR A NEW USER
     path('register/', views.register, name='register'),
+    # PROFILE
+    path('profile/', views.profile, name='profile'),
 ]
